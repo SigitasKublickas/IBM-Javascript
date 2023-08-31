@@ -4,4 +4,5 @@ export type Coin = {
   largePhoto: string;
   smallPhoto: string;
   price_btc: string;
+  price_usd: string;
 };
