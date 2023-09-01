@@ -5,7 +5,9 @@ export const coin = () => {
       params: { query: input },
     });
   };
-  const get = async (id: string) => {};
+  const get = async (id: string) => {
+    return axios.get(`https://api.coingecko.com/api/v3/coins/${id}`);
+  };
 
   const getTrending = async (): Promise<any> => {
     return axios.get("https://api.coingecko.com/api/v3/search/trending");
