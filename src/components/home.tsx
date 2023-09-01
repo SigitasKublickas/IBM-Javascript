@@ -42,24 +42,27 @@ export const Home = () => {
       );
     }
   }, 500);
-
   return (
     <div className="home">
-      <div>Home</div>
-      <div>
-        <div>Search</div>
-        <input type="text" onChange={handleInput} />
+      <div className="m-12 flex items-center justify-center flex-col ">
+        <div className="m-4">Search</div>
+        <div className="p-4">
+          <input type="text" onChange={handleInput} />
+        </div>
       </div>
-      <div>
-        <h1>
+      <div className="flex items-center justify-center flex-col gap-y-8">
+        <h1 className="text-center sm:text-3xl">
           Top-7 trending coins on CoinGecko as searched by users in the last 24
           hours
         </h1>
-        <ul>
+        <ul className="flex items-center justify-center flex-col gap-y-8">
           {searchedCoins &&
             searchedCoins.map((token) => {
               return (
-                <li key={token.id}>
+                <li
+                  key={token.id}
+                  className="w-full flex items-center justify-center"
+                >
                   <img
                     src={`${token.largePhoto}`}
                     alt={`${token.name}`}
