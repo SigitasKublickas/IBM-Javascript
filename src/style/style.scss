@@ -3,6 +3,9 @@
 @import "tailwindcss/utilities";
 @import "tailwindcss/screens";
 
+// Carousel
+@import "react-alice-carousel/lib/alice-carousel.css";
+@import "react-alice-carousel/lib/scss/alice-carousel.scss";
 * {
   padding: 0;
   margin: 0;
@@ -11,4 +14,19 @@
 }
 body {
   background-image: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+}
+.carousel-item {
+  width: 200px;
+  height: 300px;
+  background-color: transparent;
+  border-radius: 15px;
+  box-shadow: rgba(255, 255, 255, 0.19) 0px 10px 20px,
+    rgba(255, 255, 255, 0.23) 0px 6px 6px;
+}
+.search-list {
+  &-item {
+    box-shadow: rgba(255, 255, 255, 0.19) 0px 10px 20px,
+      rgba(255, 255, 255, 0.23) 0px 6px 6px;
+    cursor: pointer;
+  }
 }
