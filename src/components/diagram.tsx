@@ -9,9 +9,14 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { formatDate } from "../helpers/functions";
+import { formatDate, formatDateWithHours } from "../helpers/functions";
 type Props = {
   id: string;
+};
+type TollTipTypes = {
+  active?: boolean;
+  payload?: any;
+  label?: any;
 };
 export const Diagram = (props: Props) => {
   const [chartData, setChartData] =
@@ -22,20 +27,37 @@ export const Diagram = (props: Props) => {
     )
       .then((data) => data.json())
       .then((res) => {
+        if (res.error) return undefined;
         setChartData(
           res.prices.map((item: any[]) => {
             return {
-              date: formatDate(new Date(item[0])),
+              date: formatDateWithHours(new Date(item[0])),
               value: item[1].toFixed(4),
             };
           })
         );
       });
   }, []);
-  console.log(chartData);
+  const CustomTooltip = (props: TollTipTypes) => {
+    if (props.active) {
+      return (
+        <div className="subscribers-by-channel-tooltip">
+          <p className="subscribers-by-channel-tooltip-label">{props.label}</p>
+          <p className="subscribers-by-channel-tooltip-value">
+            ${props.payload[0].value}
+          </p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+  if (!chartData) {
+    return <div>Klaida!</div>;
+  }
   return (
     <div>
-      <ResponsiveContainer width="80%" height={400}>
+      <ResponsiveContainer height={400}>
         <AreaChart data={chartData}>
           <defs>
             <linearGradient id="color" x1="0" y1="0" x2="0" y2="1">
@@ -50,9 +72,13 @@ export const Diagram = (props: Props) => {
             dataKey="date"
             axisLine={false}
             tickLine={false}
-            tickFormatter={(str) => {
-              const date = parseISO(str.slice(0, 10));
-              return String(date);
+            tickFormatter={(str, index) => {
+              if (index % 24 === 0) {
+                const date = parseISO(str.slice(0, 10));
+                return formatDate(date);
+              } else {
+                return "";
+              }
             }}
           />
 
@@ -62,7 +88,15 @@ export const Diagram = (props: Props) => {
             tickFormatter={(number) => `$${number}`}
           />
 
-          <Tooltip />
+          <Tooltip
+            content={
+              <CustomTooltip
+                active={true}
+                payload={undefined}
+                label={undefined}
+              />
+            }
+          />
           <CartesianGrid opacity="0.2" vertical={false} />
         </AreaChart>
       </ResponsiveContainer>
