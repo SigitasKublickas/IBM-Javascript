@@ -32,7 +32,7 @@ export const Coin = () => {
           });
         });
     }
-  }, []);
+  }, [params.id]);
   return (
     <div className="coin">
       <div className="flex flex-col gap-y-4 mt-8">

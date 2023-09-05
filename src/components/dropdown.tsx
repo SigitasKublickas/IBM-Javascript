@@ -1,6 +1,6 @@
 import axios from "axios";
 import { debounce } from "lodash";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api";
 import { arrangedCoinItem } from "../helpers/functions";
@@ -8,9 +8,11 @@ import { Coin } from "../helpers/types";
 
 export const Dropdown = () => {
   const [searchedCoins, setSearchedCoins] = useState<Coin[]>();
+  const [value, setValue] = useState<string>("");
 
   const handleInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
     debouncedSearch(e.target.value);
+    setValue(e.target.value);
   };
 
   const debouncedSearch = debounce(async (value) => {
@@ -21,7 +23,6 @@ export const Dropdown = () => {
         .search(value)
         .then((res) => {
           if (!res.data.success) return;
-
           setSearchedCoins(
             res.data.coins
               .slice(0, 20)
@@ -30,6 +31,11 @@ export const Dropdown = () => {
         });
     }
   }, 500);
+  useEffect(() => {
+    if (value == "") {
+      setSearchedCoins(undefined);
+    }
+  });
   return (
     <>
       <div className="m-4 flex items-center justify-center flex-col">
@@ -40,6 +46,7 @@ export const Dropdown = () => {
             autoComplete="off"
             placeholder="Search"
             maxLength={30}
+            value={value}
           />
           <div
             className={`dropdown-content flex-col gap-y-2 ${
@@ -57,6 +64,7 @@ export const Dropdown = () => {
                   <Link
                     to={`/${token.id}`}
                     className="dropdown-content-item flex"
+                    onClick={() => setValue("")}
                   >
                     <div className="w-2/4">
                       <img
