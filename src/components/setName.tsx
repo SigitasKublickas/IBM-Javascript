@@ -10,7 +10,7 @@ export const SetName = (props: Props) => {
   const handleForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (value.length != 0) {
-      localStorage.setItem(`${localStorage.getItem("name")}`, value);
+      localStorage.setItem(`name`, value);
       navigate("/");
     }
   };
