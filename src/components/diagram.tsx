@@ -87,8 +87,8 @@ export const Diagram = (props: Props) => {
     if (date.getTime() > today.getTime()) {
       alert("The date must be less than today!");
     } else {
-      if (from === date.getTime() || to === date.getTime()) {
-        alert("The date must be less than today!");
+      if (!expandFrom && from && from > date.getTime()) {
+        alert("The start date must be less than the end date!");
       } else {
         setExpandFrom(false);
         setExpandTo(false);
@@ -96,7 +96,6 @@ export const Diagram = (props: Props) => {
       }
     }
   };
-
   const CustomTooltip = (props: TollTipTypes) => {
     if (props.active) {
       return (
@@ -116,11 +115,7 @@ export const Diagram = (props: Props) => {
     if (expandFrom || expandTo) {
       return (
         <div className="calendar">
-          <Calendar
-            value={new Date()}
-            onChange={FromDateToUnix}
-            className="text-black"
-          />
+          <Calendar onChange={FromDateToUnix} className="text-black" />
         </div>
       );
     }

@@ -5,17 +5,36 @@ import { Link } from "react-router-dom";
 import { api } from "../api";
 import { arrangedCoinItem } from "../helpers/functions";
 import { Coin } from "../helpers/types";
+import { InputDialog } from "./inputDialog";
 
 export const Dropdown = () => {
   const [searchedCoins, setSearchedCoins] = useState<Coin[]>();
   const [value, setValue] = useState<string>("");
 
   const handleInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(e.target.value);
     setValue(e.target.value);
   };
 
-  const debouncedSearch = debounce(async (value) => {
+  useEffect(() => {
+    if (value == "") {
+      setSearchedCoins(undefined);
+    }
+  }, [value]);
+
+  const onSeacrh = (val: string) => {
+    api(axios)
+      .searchedCoins(`${localStorage.getItem("name")}`, val)
+      .then(console.log);
+  };
+
+  const onSelect = (selected: string) => {
+    api(axios)
+      .selectedCoins(`${localStorage.getItem("name")}`, selected)
+      .then(console.log);
+  };
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
     if (value === "") {
       setSearchedCoins(undefined);
     } else {
@@ -31,35 +50,30 @@ export const Dropdown = () => {
           );
         });
     }
-  }, 500);
-  useEffect(() => {
-    if (value == "") {
-      setSearchedCoins(undefined);
-    }
-  });
-  const onSeacrh = (val: string) => {
-    api(axios)
-      .searchedCoins(`${localStorage.getItem("name")}`, val)
-      .then(console.log);
   };
-  const onSelect = (selected: string) => {
-    api(axios)
-      .selectedCoins(`${localStorage.getItem("name")}`, selected)
-      .then(console.log);
-  };
+
   return (
     <>
       <div className="m-4 flex items-center justify-center flex-col">
         <div className="dropdown">
-          <input
-            className="text-black text-bold dropdown-search w-full"
-            onChange={handleInput}
-            autoComplete="off"
-            placeholder="Search"
-            maxLength={30}
-            value={value}
-            disabled={localStorage.getItem("name") == null ? true : false}
-          />
+          <form
+            className="flex flex-col w-full gap-y-2"
+            onSubmit={handleSubmit}
+          >
+            {value.length == 30 && (
+              <InputDialog text="Do not exceed 30 characters!" />
+            )}
+            <input
+              className="text-black text-bold dropdown-search w-full"
+              onChange={handleInput}
+              autoComplete="off"
+              placeholder="Search"
+              maxLength={30}
+              value={value}
+              disabled={localStorage.getItem("name") == null ? true : false}
+            />
+            <input type="submit" value="Submit" className="button" />
+          </form>
           <div
             className={`dropdown-content flex-col gap-y-2 ${
               searchedCoins ? "flex" : "none"
@@ -80,6 +94,7 @@ export const Dropdown = () => {
                       setValue("");
                       onSelect(token.id);
                     }}
+                    key={token.id}
                   >
                     <div className="w-2/4">
                       <img
