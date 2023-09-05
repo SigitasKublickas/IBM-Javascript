@@ -46,6 +46,11 @@ export const Dropdown = () => {
               searchedCoins ? "flex" : "none"
             }`}
           >
+            {searchedCoins?.length == 0 && (
+              <div className="dropdown-content-item-empty flex">
+                No record found
+              </div>
+            )}
             {searchedCoins &&
               searchedCoins.map((token) => {
                 return (
