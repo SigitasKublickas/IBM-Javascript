@@ -36,14 +36,21 @@ export const TrandingCoins = () => {
       });
   }, [usd]);
 
+  const onSelect = (selected: string) => {
+    api(axios).selectedCoins("Sigitas", selected).then(console.log);
+  };
+
   useEffect(() => {
     if (!trandingCoins) return;
     setItems(
       trandingCoins.map((token) => {
         return (
           <Link
-            to={token.id}
+            to={`/crypto/${token.id}`}
             className="carousel-item flex items-center justify-center flex-col"
+            onClick={() => {
+              onSelect(token.id);
+            }}
           >
             <div className="w-4/5 h-full flex items-center justify-cente flex-col">
               <img
