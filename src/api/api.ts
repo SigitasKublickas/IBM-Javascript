@@ -1,5 +1,5 @@
 import axios, { Axios } from "axios";
-export const APIURL = "http://localhost:8000";
+export const APIURL = "https://ibm-backend-tnu5.onrender.com";
 export const api = (axios: Axios) => {
   const getTrandingCoins = async (): Promise<any> => {
     return axios.get(`${APIURL}/getTrandingCoins`);
