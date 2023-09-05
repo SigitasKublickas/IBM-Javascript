@@ -1,14 +1,17 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 type Props = {};
 
 export const SetName = (props: Props) => {
   const [value, setValue] = useState<string>("");
+  const navigate = useNavigate();
   const handleForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (value.length != 0) {
       localStorage.setItem(`${localStorage.getItem("name")}`, value);
+      navigate("/");
     }
   };
 
