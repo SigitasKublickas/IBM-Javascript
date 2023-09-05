@@ -20,7 +20,6 @@ export const Coin = () => {
       api(axios)
         .getCoin(params.id)
         .then((item: any) => {
-          console.log(item);
           setCoin({
             img: item.data.coin.image.thumb,
             name: item.data.coin.name,
