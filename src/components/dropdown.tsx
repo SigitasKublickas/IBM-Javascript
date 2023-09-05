@@ -19,6 +19,7 @@ export const Dropdown = () => {
     if (value === "") {
       setSearchedCoins(undefined);
     } else {
+      onSeacrh(value);
       api(axios)
         .search(value)
         .then((res) => {
@@ -36,6 +37,16 @@ export const Dropdown = () => {
       setSearchedCoins(undefined);
     }
   });
+  const onSeacrh = (val: string) => {
+    api(axios)
+      .searchedCoins(`${localStorage.getItem("name")}`, val)
+      .then(console.log);
+  };
+  const onSelect = (selected: string) => {
+    api(axios)
+      .selectedCoins(`${localStorage.getItem("name")}`, selected)
+      .then(console.log);
+  };
   return (
     <>
       <div className="m-4 flex items-center justify-center flex-col">
@@ -47,6 +58,7 @@ export const Dropdown = () => {
             placeholder="Search"
             maxLength={30}
             value={value}
+            disabled={localStorage.getItem("name") == null ? true : false}
           />
           <div
             className={`dropdown-content flex-col gap-y-2 ${
@@ -62,9 +74,12 @@ export const Dropdown = () => {
               searchedCoins.map((token) => {
                 return (
                   <Link
-                    to={`/${token.id}`}
+                    to={`/crypto/${token.id}`}
                     className="dropdown-content-item flex"
-                    onClick={() => setValue("")}
+                    onClick={() => {
+                      setValue("");
+                      onSelect(token.id);
+                    }}
                   >
                     <div className="w-2/4">
                       <img

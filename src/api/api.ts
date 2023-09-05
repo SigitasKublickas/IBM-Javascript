@@ -13,10 +13,24 @@ export const api = (axios: Axios) => {
   const getBtcToUsd = async (): Promise<any> => {
     return axios.get(`${APIURL}/getBtcToUsd`);
   };
+  const searchedCoins = async (
+    name: string,
+    searched: String
+  ): Promise<any> => {
+    return axios.post(`${APIURL}/searchedCoins`, { name, searched });
+  };
+  const selectedCoins = async (
+    name: string,
+    selected: String
+  ): Promise<any> => {
+    return axios.post(`${APIURL}/selectedCoins`, { name, selected });
+  };
   return {
     getTrandingCoins,
     search,
     getCoin,
     getBtcToUsd,
+    searchedCoins,
+    selectedCoins,
   };
 };
