@@ -1,4 +1,4 @@
-import { SearchCoins } from "./searchCoins";
+import { Dropdown } from "./dropdown";
 import { TrandingCoins } from "./trandingCoins";
 
 export const Home = () => {
@@ -6,7 +6,6 @@ export const Home = () => {
     <div className="home">
       <div className="flex items-center justify-center flex-col gap-y-8">
         <TrandingCoins />
-        <SearchCoins />
       </div>
     </div>
   );

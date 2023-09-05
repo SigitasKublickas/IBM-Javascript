@@ -19,6 +19,7 @@ type TollTipTypes = {
   label?: any;
 };
 export const Diagram = (props: Props) => {
+  const [minMax, setMinMax] = useState<{ min: number; max: number }>();
   const [chartData, setChartData] =
     useState<{ date: string; value: string }[]>();
   useEffect(() => {
@@ -38,14 +39,16 @@ export const Diagram = (props: Props) => {
         );
       });
   }, []);
+  // useEffect(() => {
+  //   const prices = chartData?.value.map((item) => Number(item));
+  //   setMinMax();
+  // }, [chartData]);
   const CustomTooltip = (props: TollTipTypes) => {
     if (props.active) {
       return (
-        <div className="subscribers-by-channel-tooltip">
-          <p className="subscribers-by-channel-tooltip-label">{props.label}</p>
-          <p className="subscribers-by-channel-tooltip-value">
-            ${props.payload[0].value}
-          </p>
+        <div>
+          <p>{props.label}</p>
+          <p>${props.payload[0].value}</p>
         </div>
       );
     }

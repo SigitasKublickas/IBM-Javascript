@@ -38,3 +38,15 @@ export const formatDate = (date: Date): string => {
 
   return `${year}-${month}-${day}`;
 };
+export const findMinMax = (
+  arr: number[]
+): { min: number | undefined; max: number | undefined } => {
+  if (arr.length === 0) {
+    return { min: undefined, max: undefined }; // Handle empty array
+  }
+
+  const min = Math.min(...arr);
+  const max = Math.max(...arr);
+
+  return { min, max };
+};

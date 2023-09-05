@@ -59,12 +59,12 @@ export const TrandingCoins = () => {
                   width="15px"
                 />
                 <div className="text-xs md:text-lg">
-                  {Number(token.price_btc).toFixed(14)}
+                  {Number(token.price_btc).toFixed(8)}
                 </div>
               </div>
               <div className="text-xs flex p-2 md:text-lg">
                 <span>$</span>
-                {Number(token.price_usd).toFixed(14)}
+                {Number(token.price_usd).toFixed(8)}
               </div>
             </div>
           </Link>
