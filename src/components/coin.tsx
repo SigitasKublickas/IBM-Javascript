@@ -46,9 +46,7 @@ export const Coin = () => {
         <div>Circulating Supply: {coin?.circulatingSup}</div>
         <div>Market Cap: {coin?.marketCap}</div>
       </div>
-      <div style={{ marginTop: "200px" }}>
-        {params.id && <Diagram id={params.id} />}
-      </div>
+      <div className="mt-12">{params.id && <Diagram id={params.id} />}</div>
     </div>
   );
 };
