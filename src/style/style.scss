@@ -1,8 +1,131 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "tailwindcss/screens";
 
+// Carousel
+@import "react-alice-carousel/lib/alice-carousel.css";
+@import "react-alice-carousel/lib/scss/alice-carousel.scss";
 * {
   padding: 0;
   margin: 0;
+  font-family: "Courier New", Courier, monospace;
+}
+body {
+  background-image: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+  color: white;
+}
+.carousel-item {
+  height: 300px;
+  background-color: transparent;
+  border-radius: 30px;
+  border: 1px solid rgba(126, 126, 126, 0.5);
+}
+.search-list {
+  &-item {
+    box-shadow: rgba(255, 255, 255, 0.19) 0px 10px 20px,
+      rgba(255, 255, 255, 0.23) 0px 6px 6px;
+    cursor: pointer;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .dropdown {
+    width: 300px;
+  }
+}
+@media only screen and (min-width: 600px) {
+  .dropdown {
+    width: 400px;
+  }
+}
+.dropdown {
+  position: relative;
+  &-search {
+    padding: 10px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+      rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+      rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  }
+  &-content {
+    position: absolute;
+    z-index: 1001;
+    top: 109%;
+    left: 0;
+    padding: 15px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+      rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+      rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+    &-item-empty {
+      padding: 10px;
+      color: #333;
+      font-weight: 500;
+      transition: 0.5 box-shadow;
+      box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+        rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    }
+    &-item {
+      padding: 10px;
+      color: #333;
+      font-weight: 500;
+      transition: 0.5 box-shadow;
+      box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+        rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+      &:hover {
+        transition: 0.5 box-shadow;
+        cursor: pointer;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+          rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+          rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+      }
+    }
+  }
+}
+.range-graph {
+  & .active {
+    background-color: rgb(95, 95, 253);
+  }
+  border: 0.5px solid rgba(126, 126, 126, 0.5);
+  &-item {
+    border: 1px solid rgb(95, 95, 253);
+    font-weight: bold;
+    transition: 0.5 all;
+    position: relative;
+    &-custom {
+      position: absolute;
+      bottom: 100%;
+      width: 100%;
+      height: 50px;
+      border: 1px solid rgb(95, 95, 253);
+      &-item {
+        border: 0.5px solid rgba(126, 126, 126, 0.5);
+        position: relative;
+        &:hover {
+          background-color: rgb(95, 95, 253);
+          cursor: pointer;
+        }
+      }
+    }
+    &:hover {
+      background-color: rgb(95, 95, 253);
+      color: black;
+      cursor: pointer;
+      transition: 0.5 all;
+    }
+  }
+}
+input:focus {
+  outline: none;
+}
+.none {
+  display: none;
+}
+.calendar {
+  position: absolute;
+  bottom: 110%;
 }
