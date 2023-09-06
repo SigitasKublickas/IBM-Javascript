@@ -17,17 +17,17 @@ export const Coin = () => {
   const params = useParams();
   useEffect(() => {
     if (params && params.id) {
-      api(axios)
-        .getCoin(params.id)
+      fetch(`https://api.coingecko.com/api/v3/coins/${params.id}`)
+        .then((data) => data.json())
         .then((item: any) => {
           setCoin({
-            img: item.data.coin.image.thumb,
-            name: item.data.coin.name,
-            symbol: item.data.coin.symbol,
-            priceUsd: item.data.coin.market_data.current_price.usd,
-            priceBtc: item.data.coin.market_data.current_price.btc,
-            circulatingSup: item.data.coin.market_data.circulating_supply,
-            marketCap: item.data.coin.market_data.market_cap.usd,
+            img: item.image.thumb,
+            name: item.name,
+            symbol: item.symbol,
+            priceUsd: item.market_data.current_price.usd,
+            priceBtc: item.market_data.current_price.btc,
+            circulatingSup: item.market_data.circulating_supply,
+            marketCap: item.market_data.market_cap.usd,
           });
         });
     }

@@ -39,14 +39,15 @@ export const Dropdown = () => {
       setSearchedCoins(undefined);
     } else {
       onSeacrh(value);
-      api(axios)
-        .search(value)
+      fetch(
+        "https://api.coingecko.com/api/v3/search?" +
+          new URLSearchParams({ query: value })
+      )
+        .then((res) => res.json())
         .then((res) => {
-          if (!res.data.success) return;
+          if (!res.coins) return;
           setSearchedCoins(
-            res.data.coins
-              .slice(0, 20)
-              .map((item: any) => arrangedCoinItem(item))
+            res.coins.slice(0, 20).map((item: any) => arrangedCoinItem(item))
           );
         });
     }

@@ -16,22 +16,20 @@ export const TrandingCoins = () => {
   const [items, setItems] = useState<any>();
   const [usd, setUsd] = useState<number>(0);
   useEffect(() => {
-    api(axios)
-      .getBtcToUsd()
-      .then((res) => {
-        setUsd(res.data.usd);
-      });
+    fetch(
+      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
+    )
+      .then((data) => data.json())
+      .then((res) => setUsd(res.bitcoin.usd));
   }, []);
 
   useEffect(() => {
-    api(axios)
-      .getTrandingCoins()
+    fetch("https://api.coingecko.com/api/v3/search/trending")
+      .then((data) => data.json())
       .then((res: any) => {
-        if (!res.data.success) return;
+        if (!res.coins) return;
         setTrandingCoins(
-          res.data.coins.map((token: any) =>
-            arrangedTrandingCoinItem(token, usd)
-          )
+          res.coins.map((token: any) => arrangedTrandingCoinItem(token, usd))
         );
       });
   }, [usd]);
