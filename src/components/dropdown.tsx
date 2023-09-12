@@ -39,11 +39,11 @@ export const Dropdown = () => {
       setSearchedCoins(undefined);
     } else {
       onSeacrh(value);
-      fetch(
-        "https://api.coingecko.com/api/v3/search?" +
-          new URLSearchParams({ query: value })
-      )
-        .then((res) => res.json())
+      api(axios)
+        .fetchFromUrl(
+          "https://api.coingecko.com/api/v3/search?" +
+            new URLSearchParams({ query: value })
+        )
         .then((res) => {
           if (!res.coins) return;
           setSearchedCoins(

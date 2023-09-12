@@ -17,8 +17,8 @@ export const Coin = () => {
   const params = useParams();
   useEffect(() => {
     if (params && params.id) {
-      fetch(`https://api.coingecko.com/api/v3/coins/${params.id}`)
-        .then((data) => data.json())
+      api(axios)
+        .fetchFromUrl(`https://api.coingecko.com/api/v3/coins/${params.id}`)
         .then((item: any) => {
           setCoin({
             img: item.image.thumb,

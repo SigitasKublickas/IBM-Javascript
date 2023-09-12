@@ -25,7 +25,16 @@ export const api = (axios: Axios) => {
   ): Promise<any> => {
     return axios.post(`${APIURL}/selectedCoins`, { name, selected });
   };
+  const fetchFromUrl = async (url: string): Promise<any> => {
+    fetch(url, {
+      mode: "cors",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    }).then((data) => data.json());
+  };
   return {
+    fetchFromUrl,
     getTrandingCoins,
     search,
     getCoin,

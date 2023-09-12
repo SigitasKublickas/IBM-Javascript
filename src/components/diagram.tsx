@@ -18,6 +18,8 @@ import {
 
 import "react-calendar/dist/Calendar.css";
 import OutsideAlerter from "./outclick";
+import { api } from "../api";
+import axios from "axios";
 type Props = {
   id: string;
 };
@@ -27,7 +29,6 @@ type TollTipTypes = {
   label?: any;
 };
 export const Diagram = (props: Props) => {
-  const [minMax, setMinMax] = useState<{ min: number; max: number }>();
   const [expandFrom, setExpandFrom] = useState<boolean>(false);
   const [expandTo, setExpandTo] = useState<boolean>(false);
   const [from, setFrom] = useState<number | undefined>();
@@ -35,18 +36,19 @@ export const Diagram = (props: Props) => {
   const [days, setDays] = useState<number>(7);
   const [chartData, setChartData] =
     useState<{ date: string; value: string }[]>();
+
   useEffect(() => {
-    fetch(
-      `https://api.coingecko.com/api/v3/coins/${props.id}/market_chart?vs_currency=usd&days=${days}`
-    )
-      .then((data) => data.json())
+    api(axios)
+      .fetchFromUrl(
+        `https://api.coingecko.com/api/v3/coins/${props.id}/market_chart?vs_currency=usd&days=${days}`
+      )
       .then((res) => {
-        if (res.error) return undefined;
+        if (res.error) return;
         setChartData(
           res.prices.map((item: any[]) => {
             return {
               date:
-                days == 1
+                days === 1
                   ? formatHours(new Date(item[0]))
                   : formatDateWithHours(new Date(item[0])),
               value: item[1].toFixed(4),
@@ -54,21 +56,21 @@ export const Diagram = (props: Props) => {
           })
         );
       });
-  }, [days]);
+  }, [days, props.id]);
 
   useEffect(() => {
     if (from && to) {
       setDays(0);
-      fetch(
-        `https://api.coingecko.com/api/v3/coins/${
-          props.id
-        }/market_chart/range?vs_currency=usd&from=${from / 1000}&to=${
-          to / 1000
-        }`
-      )
-        .then((data) => data.json())
+      api(axios)
+        .fetchFromUrl(
+          `https://api.coingecko.com/api/v3/coins/${
+            props.id
+          }/market_chart/range?vs_currency=usd&from=${from / 1000}&to=${
+            to / 1000
+          }`
+        )
         .then((res) => {
-          if (res.error) return undefined;
+          if (res.error) return;
           setChartData(
             res.prices.map((item: any[]) => {
               return {
@@ -79,7 +81,7 @@ export const Diagram = (props: Props) => {
           );
         });
     }
-  }, [from, to]);
+  }, [from, to, props.id]);
 
   const FromDateToUnix = (value: any) => {
     const date = new Date(value);
@@ -96,6 +98,7 @@ export const Diagram = (props: Props) => {
       }
     }
   };
+
   const CustomTooltip = (props: TollTipTypes) => {
     if (props.active) {
       return (
@@ -108,9 +111,6 @@ export const Diagram = (props: Props) => {
 
     return null;
   };
-  if (!chartData) {
-    return <></>;
-  }
   const MiniCalendar = () => {
     if (expandFrom || expandTo) {
       return (
@@ -120,12 +120,16 @@ export const Diagram = (props: Props) => {
       );
     }
   };
+
+  if (!chartData) {
+    return <></>;
+  }
   return (
     <div>
       <div className="mt-40 xl:mt-12 flex gap-y-4 gap-x-2 w-full range-graph p-2 md:gap-x-4 mb-12 flex-col md:flex-row">
         <div
           className={`range-graph-item w-full flex items-center justify-center md:w-3/12 ${
-            days == 1 && "active"
+            days === 1 && "active"
           }`}
           onClick={() => {
             setDays(1);
@@ -137,7 +141,7 @@ export const Diagram = (props: Props) => {
         </div>
         <div
           className={`range-graph-item w-full flex items-center justify-center md:w-3/12 ${
-            days == 7 && "active"
+            days === 7 && "active"
           }`}
           onClick={() => {
             setDays(7);
@@ -149,7 +153,7 @@ export const Diagram = (props: Props) => {
         </div>
         <div
           className={`range-graph-item w-full flex items-center justify-center md:w-3/12 ${
-            days == 30 && "active"
+            days === 30 && "active"
           }`}
           onClick={() => {
             setDays(30);
@@ -160,7 +164,7 @@ export const Diagram = (props: Props) => {
           30
         </div>
         <OutsideAlerter
-          style="w-full flex items-center justify-center md:w-3/12 relative"
+          style={"w-full flex items-center justify-center md:w-3/12 relative"}
           outclick={() => {
             setExpandFrom(false);
             setExpandTo(false);
@@ -187,54 +191,60 @@ export const Diagram = (props: Props) => {
           </div>
         </OutsideAlerter>
       </div>
-      <ResponsiveContainer height={400}>
-        <AreaChart data={chartData}>
-          <defs>
-            <linearGradient id="color" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#2451B7" stopOpacity="0.4"></stop>
-              <stop offset="75%" stopColor="#2451B7" stopOpacity="0.05"></stop>
-            </linearGradient>
-          </defs>
+      {chartData && (
+        <ResponsiveContainer height={400}>
+          <AreaChart data={chartData}>
+            <defs>
+              <linearGradient id="color" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#2451B7" stopOpacity="0.4"></stop>
+                <stop
+                  offset="75%"
+                  stopColor="#2451B7"
+                  stopOpacity="0.05"
+                ></stop>
+              </linearGradient>
+            </defs>
 
-          <Area dataKey="value" stroke="#2451B7" fill="url(#color)" />
+            <Area dataKey="value" stroke="#2451B7" fill="url(#color)" />
 
-          <XAxis
-            dataKey="date"
-            axisLine={false}
-            tickLine={false}
-            tickCount={24}
-            tickFormatter={(str, index) => {
-              if (days === 1) {
-                return str;
-              } else {
-                if (index % 24 === 0) {
-                  const date = parseISO(str.slice(0, 10));
-                  return formatDate(date);
+            <XAxis
+              dataKey="date"
+              axisLine={false}
+              tickLine={false}
+              tickCount={24}
+              tickFormatter={(str, index) => {
+                if (days === 1) {
+                  return str;
                 } else {
-                  return "";
+                  if (index % 24 === 0) {
+                    const date = parseISO(str.slice(0, 10));
+                    return formatDate(date);
+                  } else {
+                    return "";
+                  }
                 }
+              }}
+            />
+
+            <YAxis
+              dataKey="value"
+              tickCount={8}
+              tickFormatter={(number) => `$${number}`}
+            />
+
+            <Tooltip
+              content={
+                <CustomTooltip
+                  active={true}
+                  payload={undefined}
+                  label={undefined}
+                />
               }
-            }}
-          />
-
-          <YAxis
-            dataKey="value"
-            tickCount={8}
-            tickFormatter={(number) => `$${number}`}
-          />
-
-          <Tooltip
-            content={
-              <CustomTooltip
-                active={true}
-                payload={undefined}
-                label={undefined}
-              />
-            }
-          />
-          <CartesianGrid opacity="0.2" vertical={false} />
-        </AreaChart>
-      </ResponsiveContainer>
+            />
+            <CartesianGrid opacity="0.2" vertical={false} />
+          </AreaChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 };

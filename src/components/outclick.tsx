@@ -1,5 +1,11 @@
 import { useRef, useEffect } from "react";
-export default function OutsideAlerter(props: any) {
+
+type Props = {
+  style: string;
+  outclick: () => void;
+  children: any;
+};
+export default function OutsideAlerter(props: Props) {
   function useOutsideAlerter(ref: any) {
     useEffect(() => {
       function handleClickOutside(event: any) {

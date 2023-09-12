@@ -16,16 +16,16 @@ export const TrandingCoins = () => {
   const [items, setItems] = useState<any>();
   const [usd, setUsd] = useState<number>(0);
   useEffect(() => {
-    fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
-    )
-      .then((data) => data.json())
+    api(axios)
+      .fetchFromUrl(
+        "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
+      )
       .then((res) => setUsd(res.bitcoin.usd));
   }, []);
 
   useEffect(() => {
-    fetch("https://api.coingecko.com/api/v3/search/trending")
-      .then((data) => data.json())
+    api(axios)
+      .fetchFromUrl("https://api.coingecko.com/api/v3/search/trending")
       .then((res: any) => {
         if (!res.coins) return;
         setTrandingCoins(
@@ -87,8 +87,8 @@ export const TrandingCoins = () => {
       <div className="w-2/4">
         <AliceCarousel
           items={items}
-          // autoPlayInterval={5000}
-          // autoPlay={true}
+          autoPlayInterval={5000}
+          autoPlay={true}
           infinite={true}
           responsive={responsive}
           controlsStrategy="alternate"
