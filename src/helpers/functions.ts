@@ -46,13 +46,18 @@ export const formatDate = (date: Date): string => {
 };
 export const findMinMax = (
   arr: number[]
-): { min: number | undefined; max: number | undefined } => {
+): { min: number; max: number } | undefined => {
   if (arr.length === 0) {
-    return { min: undefined, max: undefined }; // Handle empty array
+    return undefined; // Handle empty array
   }
 
   const min = Math.min(...arr);
   const max = Math.max(...arr);
 
   return { min, max };
+};
+export const isDexadecimal = (num: number): boolean => {
+  return (
+    num !== 0 && Math.abs(num) >= 1 && Math.abs(num) < 1e21 && num % 1 === 0
+  );
 };

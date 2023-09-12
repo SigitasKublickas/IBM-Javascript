@@ -11,15 +11,18 @@ import {
   YAxis,
 } from "recharts";
 import {
+  findMinMax,
   formatDate,
   formatDateWithHours,
   formatHours,
+  isDexadecimal,
 } from "../helpers/functions";
 
 import "react-calendar/dist/Calendar.css";
 import OutsideAlerter from "./outclick";
 import { api } from "../api";
 import axios from "axios";
+import { id } from "date-fns/locale";
 type Props = {
   id: string;
 };
@@ -29,6 +32,9 @@ type TollTipTypes = {
   label?: any;
 };
 export const Diagram = (props: Props) => {
+  const [minMax, setMinMax] = useState<
+    { min: number; max: number } | undefined
+  >();
   const [expandFrom, setExpandFrom] = useState<boolean>(false);
   const [expandTo, setExpandTo] = useState<boolean>(false);
   const [from, setFrom] = useState<number | undefined>();
@@ -38,6 +44,14 @@ export const Diagram = (props: Props) => {
     useState<{ date: string; value: string }[]>();
 
   useEffect(() => {
+    if (!chartData) return;
+    const values = chartData.map((item) => {
+      return Number(item.value);
+    });
+    setMinMax(findMinMax(values));
+  }, [chartData]);
+  useEffect(() => {
+    if (days === 0) return;
     api(axios)
       .fetchFromUrl(
         `https://api.coingecko.com/api/v3/coins/${props.id}/market_chart?vs_currency=usd&days=${days}`
@@ -50,36 +64,46 @@ export const Diagram = (props: Props) => {
                 days === 1
                   ? formatHours(new Date(item[0]))
                   : formatDateWithHours(new Date(item[0])),
-              value: item[1].toFixed(4),
+              value: isDexadecimal(item[1])
+                ? Number(item[1].toFixed(2))
+                : new Number(item[1]).toFixed(12),
             };
           })
         );
       })
       .catch(alert);
   }, [days, props.id]);
-
   useEffect(() => {
-    if (from && to) {
-      setDays(0);
-      api(axios)
-        .fetchFromUrl(
-          `https://api.coingecko.com/api/v3/coins/${
-            props.id
-          }/market_chart/range?vs_currency=usd&from=${from / 1000}&to=${
-            to / 1000
-          }`
-        )
-        .then((res) => {
-          if (!res) return;
-          setChartData(
-            res.prices.map((item: any[]) => {
-              return {
-                date: formatDateWithHours(new Date(item[0])),
-                value: item[1].toFixed(4),
-              };
-            })
-          );
-        });
+    if (from && to && from < to) {
+      console.log("suveikia2");
+      if (from > to) {
+        alert("The start date must be less than the end date!");
+        setTo(undefined);
+        setDays(7);
+      } else {
+        setDays(0);
+        api(axios)
+          .fetchFromUrl(
+            `https://api.coingecko.com/api/v3/coins/${
+              props.id
+            }/market_chart/range?vs_currency=usd&from=${from / 1000}&to=${
+              to / 1000
+            }`
+          )
+          .then((res) => {
+            if (!res) return;
+            setChartData(
+              res.prices.map((item: any[]) => {
+                return {
+                  date: formatDateWithHours(new Date(item[0])),
+                  value: isDexadecimal(item[1])
+                    ? Number(item[1].toFixed(2))
+                    : new Number(item[1]).toFixed(12),
+                };
+              })
+            );
+          });
+      }
     }
   }, [from, to, props.id]);
 
@@ -120,7 +144,7 @@ export const Diagram = (props: Props) => {
       );
     }
   };
-
+  console.log(minMax);
   if (!chartData) {
     return <></>;
   }
@@ -228,8 +252,19 @@ export const Diagram = (props: Props) => {
 
             <YAxis
               dataKey="value"
-              tickCount={8}
-              tickFormatter={(number) => `$${number}`}
+              tickCount={14}
+              tickFormatter={(number) => {
+                console.log(number.toFixed(2));
+                return `$${number.toFixed(2)}`;
+              }}
+              domain={
+                minMax
+                  ? [
+                      Number(minMax.min.toFixed(2)),
+                      Number(minMax.max.toFixed(2)),
+                    ]
+                  : undefined
+              }
             />
 
             <Tooltip
