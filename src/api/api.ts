@@ -25,14 +25,25 @@ export const api = (axios: Axios) => {
   ): Promise<any> => {
     return axios.post(`${APIURL}/selectedCoins`, { name, selected });
   };
-  const fetchFromUrl = async (url: string): Promise<any> => {
-    fetch(url, {
-      mode: "cors",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
-    }).then((data) => data.json());
+  const fetchFromUrl = async (url: string) => {
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
+
   return {
     fetchFromUrl,
     getTrandingCoins,

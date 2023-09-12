@@ -1,5 +1,4 @@
 import axios from "axios";
-import { debounce } from "lodash";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api";
@@ -16,7 +15,7 @@ export const Dropdown = () => {
   };
 
   useEffect(() => {
-    if (value == "") {
+    if (value === "") {
       setSearchedCoins(undefined);
     }
   }, [value]);
@@ -45,11 +44,11 @@ export const Dropdown = () => {
             new URLSearchParams({ query: value })
         )
         .then((res) => {
-          if (!res.coins) return;
           setSearchedCoins(
             res.coins.slice(0, 20).map((item: any) => arrangedCoinItem(item))
           );
-        });
+        })
+        .catch(alert);
     }
   };
 
@@ -61,7 +60,7 @@ export const Dropdown = () => {
             className="flex flex-col w-full gap-y-2"
             onSubmit={handleSubmit}
           >
-            {value.length == 30 && (
+            {value.length === 30 && (
               <InputDialog text="Do not exceed 30 characters!" />
             )}
             <input
@@ -80,7 +79,7 @@ export const Dropdown = () => {
               searchedCoins ? "flex" : "none"
             }`}
           >
-            {searchedCoins?.length == 0 && (
+            {searchedCoins?.length === 0 && (
               <div className="dropdown-content-item-empty flex">
                 No record found
               </div>

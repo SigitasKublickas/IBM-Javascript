@@ -43,7 +43,6 @@ export const Diagram = (props: Props) => {
         `https://api.coingecko.com/api/v3/coins/${props.id}/market_chart?vs_currency=usd&days=${days}`
       )
       .then((res) => {
-        if (res.error) return;
         setChartData(
           res.prices.map((item: any[]) => {
             return {
@@ -55,7 +54,8 @@ export const Diagram = (props: Props) => {
             };
           })
         );
-      });
+      })
+      .catch(alert);
   }, [days, props.id]);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export const Diagram = (props: Props) => {
           }`
         )
         .then((res) => {
-          if (res.error) return;
+          if (!res) return;
           setChartData(
             res.prices.map((item: any[]) => {
               return {

@@ -29,7 +29,8 @@ export const Coin = () => {
             circulatingSup: item.market_data.circulating_supply,
             marketCap: item.market_data.market_cap.usd,
           });
-        });
+        })
+        .catch(alert);
     }
   }, [params.id]);
   return (

@@ -20,18 +20,21 @@ export const TrandingCoins = () => {
       .fetchFromUrl(
         "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
       )
-      .then((res) => setUsd(res.bitcoin.usd));
+      .then((res) => {
+        setUsd(res.bitcoin.usd);
+      })
+      .catch(alert);
   }, []);
 
   useEffect(() => {
     api(axios)
       .fetchFromUrl("https://api.coingecko.com/api/v3/search/trending")
       .then((res: any) => {
-        if (!res.coins) return;
         setTrandingCoins(
           res.coins.map((token: any) => arrangedTrandingCoinItem(token, usd))
         );
-      });
+      })
+      .catch(alert);
   }, [usd]);
 
   const onSelect = (selected: string) => {
